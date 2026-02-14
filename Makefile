@@ -7,6 +7,6 @@ clean:
 	@rm -rf ./machineid
 
 test:
-	go test ./...
+	go test
 
 default: build

@@ -1,4 +1,4 @@
-// +build linux
+//go:build linux
 
 package machineid
 
@@ -9,6 +9,7 @@ const (
 	// Some systems (like Fedora 20) only know this path.
 	// Sometimes it's the other way round.
 	dbusPathEtc = "/etc/machine-id"
+	productPath = "/sys/class/dmi/id/product_uuid"
 )
 
 // machineID returns the uuid specified at `/var/lib/dbus/machine-id` or `/etc/machine-id`.
@@ -19,6 +20,10 @@ func machineID() (string, error) {
 	if err != nil {
 		// try fallback path
 		id, err = readFile(dbusPathEtc)
+	}
+	if err != nil {
+		// try fallback path
+		id, err = readFile(productPath)
 	}
 	if err != nil {
 		return "", err

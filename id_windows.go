@@ -1,4 +1,4 @@
-// +build windows
+//go:build windows
 
 package machineid
 
@@ -6,8 +6,8 @@ import (
 	"golang.org/x/sys/windows/registry"
 )
 
-// machineID returns the key MachineGuid in registry `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography`.
-// If there is an error running the commad an empty string is returned.
+// machineID returns the key MachineGuid in the registry `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography`.
+// If there is an error running the command, an empty string is returned.
 func machineID() (string, error) {
 	k, err := registry.OpenKey(registry.LOCAL_MACHINE, `SOFTWARE\Microsoft\Cryptography`, registry.QUERY_VALUE|registry.WOW64_64KEY)
 	if err != nil {

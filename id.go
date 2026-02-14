@@ -1,30 +1,16 @@
-// Package machineid provides support for reading the unique machine id of most OSs (without admin privileges).
-//
-// https://github.com/denisbrodbeck/machineid
-//
-// https://godoc.org/github.com/denisbrodbeck/machineid/cmd/machineid
-//
-// This package is Cross-Platform (tested on Win7+, Debian 8+, Ubuntu 14.04+, OS X 10.6+, FreeBSD 11+)
-// and does not use any internal hardware IDs (no MAC, BIOS, or CPU).
-//
-// Returned machine IDs are generally stable for the OS installation
-// and usually stay the same after updates or hardware changes.
-//
-// This package allows sharing of machine IDs in a secure way by
-// calculating HMAC-SHA256 over a user provided app ID, which is keyed by the machine id.
-//
-// Caveat: Image-based environments have usually the same machine-id (perfect clone).
-// Linux users can generate a new id with `dbus-uuidgen` and put the id into
-// `/var/lib/dbus/machine-id` and `/etc/machine-id`.
-// Windows users can use the `sysprep` toolchain to create images, which produce valid images ready for distribution.
-package machineid // import "github.com/denisbrodbeck/machineid"
+package machineid
 
 import (
+	"crypto/hmac"
+	"encoding/hex"
 	"fmt"
+	"hash"
+
+	"golang.org/x/crypto/blake2b"
 )
 
-// ID returns the platform specific machine id of the current host OS.
-// Regard the returned id as "confidential" and consider using ProtectedID() instead.
+// ID returns the platform-specific machine id of the current host OS.
+// Regard the returned id as "confidential" and consider using ProtectedID instead.
 func ID() (string, error) {
 	id, err := machineID()
 	if err != nil {
@@ -33,13 +19,20 @@ func ID() (string, error) {
 	return id, nil
 }
 
-// ProtectedID returns a hashed version of the machine ID in a cryptographically secure way,
-// using a fixed, application-specific key.
-// Internally, this function calculates HMAC-SHA256 of the application ID, keyed by the machine ID.
+// ProtectedID returns a stable, printable identifier derived from the machine ID.
+// It computes HMAC-BLAKE2b-512(appID) keyed by the machine ID and hex-encodes the result.
 func ProtectedID(appID string) (string, error) {
 	id, err := ID()
 	if err != nil {
-		return "", fmt.Errorf("machineid: %v", err)
+		return "", err
 	}
-	return protect(appID, id), nil
+
+	mac := hmac.New(func() hash.Hash {
+		// New512 never returns nil; it returns an error only for invalid params (none here).
+		h, _ := blake2b.New512(nil)
+		return h
+	}, []byte(id))
+
+	mac.Write([]byte(appID))
+	return hex.EncodeToString(mac.Sum(nil)), nil
 }

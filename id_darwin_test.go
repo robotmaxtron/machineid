@@ -1,9 +1,9 @@
-// +build darwin
+//go:build darwin
 
 package machineid
 
 import (
-	"strings"
+	"errors"
 	"testing"
 )
 
@@ -50,8 +50,8 @@ func Test_extractID_invalidInput(t *testing.T) {
 	if got != "" {
 		t.Errorf("expected empty string, got some value %s", got)
 	}
-	if strings.Contains(err.Error(), "Failed to extract 'IOPlatformUUID'") == false {
-		t.Errorf("Got unexpected error: %v", err)
+	if !errors.Is(err, errIOPlatformUUIDNotFound) {
+		t.Fatalf("unexpected error: %v", err)
 	}
 }
 
