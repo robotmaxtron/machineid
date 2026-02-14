@@ -4,7 +4,7 @@
 
 … because sometimes you just need to reliably identify your machines.
 
-[![GoDoc](https://godoc.org/github.com/robotmaxtron/machineid?status.svg)](https://godoc.org/github.com/robotmaxtron/machineid) [![Go Report Card](https://goreportcard.com/badge/github.com/robotmaxtron/machineid)](https://goreportcard.com/report/github.com/robotmaxtron/machineid)
+[![GoDoc](https://godoc.org/github.com/robotmaxtron/machineid?status.svg)](https://godoc.org/github.com/robotmaxtron/machineid)
 
 ## Main Features
 
@@ -74,7 +74,7 @@ Returns original machine id as a `string`.
 
 ### Function: ProtectedID(appID string) (string, error)
 
-Returns a hashed version of the machine ID as a `string`. The hash is generated in a cryptographically secure way, using a fixed, application-specific key (calculates HHMAC‑BLAKE2b‑512 of the app ID, keyed by the machine ID).
+Returns a hashed version of the machine ID as a `string`. The hash is generated in a cryptographically secure way, using a fixed, application-specific key (calculates HMAC‑BLAKE2b‑512 of the app ID, keyed by the machine ID).
 
 ## What you get
 
