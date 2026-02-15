@@ -2,29 +2,35 @@
 
 ![Image of Gopher 47](logo.png)
 
-… because sometimes you just need to reliably identify your machines.
+… because sometimes you need to reliably identify your machines.
 
 [![GoDoc](https://godoc.org/github.com/robotmaxtron/machineid?status.svg)](https://godoc.org/github.com/robotmaxtron/machineid)
 
 ## Main Features
 
-* Cross-Platform (targets for Win7+, Debian 8+, Ubuntu 14.04+, OS X 10.6+, FreeBSD 11+)
+* Cross-Platform (targets for Win7+, Debian 8+, Ubuntu 14.04+, OS X 10.6+, FreeBSD 11+, AIX 7.1+, z/OS 2.2+)
 * No admin privileges are required
 * Hardware independent (no usage of MAC, BIOS or CPU — those are too unreliable, especially in a VM environment)
+* 64-bit optimizations
+* Modern, secure hashing algorithm (BLAKE2b)
+* No external dependencies
 * IDs are unique<sup>[1](#unique-key-reliability)</sup> to the installed OS
 
 ## Installation
 
-Get the library with
+Import the library with
 
-```bash
-go get github.com/robotmaxtron/machineid
+```Go
+[...]
+import (
+	github.com/robotmaxtron/machineid
+)
 ```
 
 You can also add the cli app directly to your `$GOPATH/bin` with
 
 ```bash
-go install github.com/robotmaxtron/machineid/cmd/machineid
+go install github.com/robotmaxtron/machineid/cmd/machineid@latest
 ```
 
 ## Usage
@@ -89,7 +95,7 @@ The following sources are used:
 * **Linux** uses `/var/lib/dbus/machine-id` ([man](http://man7.org/linux/man-pages/man5/machine-id.5.html))
 * **OS X** uses `IOPlatformUUID`
 * **Windows** uses the `MachineGuid` from `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Cryptography`
-* **Z/OS** experimentally uses `sysinfo`
+* **z/OS** experimentally uses `sysinfo`
 
 ## Unique Key Reliability
 
