@@ -4,7 +4,7 @@ build: clean
 	@go build -o machineid ./cmd/machineid/main.go
 
 clean:
-	@rm -rf ./machineid
+	@rm -f ./machineid
 
 test:
 	go test

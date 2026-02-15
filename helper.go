@@ -4,9 +4,10 @@ import (
 	"context"
 	"io"
 	"os"
-	"os/exec"
 	"strings"
 	"time"
+
+	exec "golang.org/x/sys/execabs"
 )
 
 // run wraps `exec.Command` with easy access to stdout and stderr.

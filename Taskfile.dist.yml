@@ -1,0 +1,29 @@
+version: 3
+tasks:
+  default:
+    cmds:
+      - task: build
+
+  setup:
+    desc: Download dependencies
+    cmd: go mod download
+
+  tidy:
+    desc: Run go mod tidy
+    cmd: go mod tidy
+
+  build:
+    desc: Build the binary
+    cmd: go build -o machineid ./cmd/machineid/main.go
+
+  clean:
+    desc: Clean up the binary
+    cmd: rm -f ./machineid
+
+  test:
+    desc: Run tests
+    cmd: go test
+
+  vendor:
+      desc: Vendor dependencies
+      cmd: go mod vendor
