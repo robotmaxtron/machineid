@@ -5,14 +5,15 @@ import (
 	"encoding/hex"
 	"fmt"
 	"hash"
+	"sync"
 
-	"golang.org/x/crypto/blake2b"
+	"golang.org/x/crypto/sha3"
 )
 
 // ID returns the platform-specific machine id of the current host OS.
 // Regard the returned id as "confidential" and consider using ProtectedID instead.
 func ID() (string, error) {
-	id, err := machineID()
+	id, err := getUID()
 	if err != nil {
 		return "", fmt.Errorf("machineid: %v", err)
 	}
@@ -20,19 +21,38 @@ func ID() (string, error) {
 }
 
 // ProtectedID returns a stable, printable identifier derived from the machine ID.
-// It computes HMAC-BLAKE2b-512(appID) keyed by the machine ID and hex-encodes the result.
+// It computes HMAC-SHA3-512(appID) keyed by the machine ID and hex-encodes the result.
 func ProtectedID(appID string) (string, error) {
-	id, err := ID()
+	id, err := getUID()
 	if err != nil {
 		return "", err
 	}
 
 	mac := hmac.New(func() hash.Hash {
-		// New512 never returns nil; it returns an error only for invalid params (none here).
-		h, _ := blake2b.New512(nil)
+		h := sha3.New512()
 		return h
 	}, []byte(id))
 
 	mac.Write([]byte(appID))
 	return hex.EncodeToString(mac.Sum(nil)), nil
+}
+
+func getUID() (string, error) {
+	var (
+		once      sync.Once
+		cachedID  string
+		cachedErr error
+	)
+	once.Do(func() {
+		uid, err := machineID()
+		if err != nil {
+			cachedErr = err
+			return
+		}
+		cachedID = uid
+	})
+	if cachedErr != nil {
+		return "", cachedErr
+	}
+	return cachedID, nil
 }

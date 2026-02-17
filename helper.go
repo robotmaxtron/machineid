@@ -1,11 +1,11 @@
 package machineid
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"os"
 	"os/exec"
-	"strings"
 	"time"
 )
 
@@ -18,7 +18,7 @@ func run(stdout, stderr io.Writer, cmd string, args ...string) error {
 	}
 
 	// Prevent indefinite hangs.
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	c := exec.CommandContext(ctx, path, args...)
@@ -33,5 +33,5 @@ func readFile(filename string) ([]byte, error) {
 }
 
 func trim(s string) string {
-	return strings.TrimSpace(s)
+	return string(bytes.TrimSpace([]byte(s)))
 }

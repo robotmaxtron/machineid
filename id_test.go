@@ -24,7 +24,6 @@ func Test_ProtectedID_format(t *testing.T) {
 		t.Error("protected id should not be empty")
 	}
 
-	// BLAKE2b-512 output is 64 bytes => 128 hex chars.
 	if len(got) != 128 {
 		t.Fatalf("protected id length = %d, want %d", len(got), 128)
 	}

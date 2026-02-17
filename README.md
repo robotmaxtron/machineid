@@ -10,9 +10,7 @@
 
 * Cross-Platform (targets for Win7+, Debian 8+, Ubuntu 14.04+, OS X 10.6+, FreeBSD 11+, AIX 7.1+, z/OS 2.2+)
 * No admin privileges are required
-* Hardware independent (no usage of MAC, BIOS or CPU — those are too unreliable, especially in a VM environment)
-* 64-bit optimizations
-* Modern, secure hashing algorithm (BLAKE2b)
+* Hardware independent (no usage of MAC, BIOS or CPU — these can be unreliable, especially in a VM environment)
 * No external dependencies
 * IDs are unique<sup>[1](#unique-key-reliability)</sup> to the installed OS
 
